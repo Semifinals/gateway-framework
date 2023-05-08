@@ -5,9 +5,9 @@ namespace Semifinals.Utils.GatewayFramework;
 
 public class Passthrough : IQueryPipe
 {
-    public async Task<HttpResponseMessage[]> Pipe(HttpRequest[] reqs)
+    public async Task<Dictionary<string, HttpResponseMessage>> Pipe(Dictionary<string, HttpRequest> reqs)
     {
-        using Client client = new(reqs[0]);
-        return new HttpResponseMessage[] { await client.SubmitAsync() };
+        using Client client = new(reqs.First().Value);
+        return new() { { reqs.First().Key, await client.SubmitAsync() } };
     }
 }

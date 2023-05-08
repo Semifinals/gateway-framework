@@ -4,16 +4,16 @@ namespace Semifinals.Utils.GatewayFramework;
 
 public class Flow
 {
-    public HttpRequest[] Requests { get; set; }
+    public Dictionary<string, HttpRequest> Requests { get; set; }
 
-    public HttpResponseMessage[]? Responses { get; set; } = null;
+    public Dictionary<string, HttpResponseMessage>? Responses { get; set; } = null;
 
     public Flow(HttpRequest req)
     {
-        Requests = new HttpRequest[] { req };
+        Requests = new() { { "singular", req } };
     }
 
-    public Flow(HttpRequest[] reqs)
+    public Flow(Dictionary<string, HttpRequest> reqs)
     {
         Requests = reqs;
     }
@@ -34,13 +34,5 @@ public class Flow
     {
         Responses = await pipe.Pipe(Requests);
         return this;
-    }
-
-    public static async Task Test(HttpRequest req)
-    {
-        await new Flow(req)
-            .Pipe(new Aggregator())
-            .Pipe(new Passthrough())
-            .Response();
     }
 }

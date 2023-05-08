@@ -4,5 +4,5 @@ namespace Semifinals.Utils.GatewayFramework;
 
 public interface IPipeAsync
 {
-    Task<HttpRequest[]> Pipe(HttpRequest[] reqs);
+    Task<Dictionary<string, HttpRequest>> Pipe(Dictionary<string, HttpRequest> reqs);
 }

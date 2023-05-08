@@ -4,5 +4,5 @@ namespace Semifinals.Utils.GatewayFramework;
 
 public interface IPipe
 {
-    HttpRequest[] Pipe(HttpRequest[] reqs);
+    Dictionary<string, HttpRequest> Pipe(Dictionary<string, HttpRequest> reqs);
 }

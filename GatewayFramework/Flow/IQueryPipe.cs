@@ -5,5 +5,5 @@ namespace Semifinals.Utils.GatewayFramework;
 
 public interface IQueryPipe
 {
-    Task<HttpResponseMessage[]> Pipe(HttpRequest[] reqs);
+    Task<Dictionary<string, HttpResponseMessage>> Pipe(Dictionary<string, HttpRequest> reqs);
 }

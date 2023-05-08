@@ -28,7 +28,7 @@ internal static class TaskExtensions
         return flow.Pipe(pipe);
     }
 
-    public static async Task<HttpRequest[]> Requests(this Task<Flow> task)
+    public static async Task<Dictionary<string, HttpRequest>> Requests(this Task<Flow> task)
     {
         Flow flow = await task;
         return flow.Requests;
@@ -37,10 +37,10 @@ internal static class TaskExtensions
     public static async Task<HttpRequest> Request(this Task<Flow> task)
     {
         Flow flow = await task;
-        return flow.Requests[0];
+        return flow.Requests.First().Value;
     }
 
-    public static async Task<HttpResponseMessage[]?> Responses(this Task<Flow> task)
+    public static async Task<Dictionary<string, HttpResponseMessage>?> Responses(this Task<Flow> task)
     {
         Flow flow = await task;
         return flow.Responses;
@@ -51,7 +51,7 @@ internal static class TaskExtensions
         Flow flow = await task;
 
         if (flow.Responses != null)
-            return flow.Responses[0];
+            return flow.Responses.First().Value;
         else
             return null;
     }
