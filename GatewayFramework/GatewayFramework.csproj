@@ -4,6 +4,15 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	<PackageId>Semifinals.Utils.GatewayFramework</PackageId>
+	<Version>1.0.0</Version>
+	<AssemblyName>Semifinals.Utils.GatewayFramework</AssemblyName>
+	<RootNamespace>Semifinals.Utils.GatewayFramework</RootNamespace>
+	<Company>Semifinals</Company>
+	<Product>GatewayFramework</Product>
+	<Authors>Finley Sherwood</Authors>
+	<Description>Package for implementing an API gateway with Azure Functions in C#</Description>
+	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
