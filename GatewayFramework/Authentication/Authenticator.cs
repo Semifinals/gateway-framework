@@ -2,6 +2,9 @@
 
 namespace Semifinals.Utils.GatewayFramework.Authentication;
 
+/// <summary>
+/// Authenticator pipe to handle how the gateway should authenticate requests.
+/// </summary>
 public abstract class Authenticator : IPipeAsync
 {
     public readonly bool RequiresAuthorizationHeader;
@@ -27,7 +30,15 @@ public abstract class Authenticator : IPipeAsync
         return reqs;
     }
 
+    /// <summary>
+    /// Test if the request meets the authentication requirements.
+    /// </summary>
+    /// <returns>Whether or not the request could be authenticated</returns>
     public abstract bool Authenticate();
 
+    /// <summary>
+    /// Test if the request meets the authorization requirements.
+    /// </summary>
+    /// <returns>Whether or not the request could be authorized</returns>
     public abstract Task<bool> Authorize();
 }

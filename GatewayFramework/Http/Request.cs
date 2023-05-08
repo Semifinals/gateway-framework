@@ -3,6 +3,9 @@ using System.Text;
 
 namespace Semifinals.Utils.GatewayFramework.Http;
 
+/// <summary>
+/// A request to pass through the gateway.
+/// </summary>
 public class Request
 {
     public string Path { get; set; }
@@ -32,12 +35,21 @@ public class Request
         Headers = headers ?? new HeaderDictionary();
     }
 
+    /// <summary>
+    /// Redirect the request to a new path.
+    /// </summary>
+    /// <param name="path">The new path to send the request to</param>
+    /// <returns>The updated request</returns>
     public Request Redirect(string path)
     {
         Path = path;
         return this;
     }
 
+    /// <summary>
+    /// Clone the request.
+    /// </summary>
+    /// <returns>A new identical instance of the request</returns>
     public Request Clone()
     {
         return new Request(Method, Path, Body, Headers);

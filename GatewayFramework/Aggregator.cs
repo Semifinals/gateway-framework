@@ -2,6 +2,9 @@
 
 namespace Semifinals.Utils.GatewayFramework;
 
+/// <summary>
+/// Aggregate the responses of multiple requests.
+/// </summary>
 public class Aggregator : IQueryPipe
 {
     public async Task<Dictionary<string, HttpResponseMessage>> Pipe(Dictionary<string, Request> reqs)

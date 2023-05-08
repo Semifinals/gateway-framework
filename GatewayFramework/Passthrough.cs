@@ -2,6 +2,9 @@
 
 namespace Semifinals.Utils.GatewayFramework;
 
+/// <summary>
+/// Pass the request through the gateway.
+/// </summary>
 public class Passthrough : IQueryPipe
 {
     public async Task<Dictionary<string, HttpResponseMessage>> Pipe(Dictionary<string, Request> reqs)

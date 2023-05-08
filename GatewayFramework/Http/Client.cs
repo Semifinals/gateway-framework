@@ -2,6 +2,9 @@
 
 namespace Semifinals.Utils.GatewayFramework.Http;
 
+/// <summary>
+/// A client to submit HTTP requests on behalf of the gateway.
+/// </summary>
 public class Client : HttpClient
 {
     public readonly Request Request;
@@ -15,6 +18,10 @@ public class Client : HttpClient
                 DefaultRequestHeaders.Add(header.Key, value)));
     }
 
+    /// <summary>
+    /// Submit the request.
+    /// </summary>
+    /// <returns>The resut of the request</returns>
     public async Task<HttpResponseMessage> SubmitAsync()
     {
         HttpContent? content = Request.Body == null
