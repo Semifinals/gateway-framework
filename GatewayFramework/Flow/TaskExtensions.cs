@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Semifinals.Utils.GatewayFramework.Http;
 
 namespace Semifinals.Utils.GatewayFramework;
 
@@ -28,13 +28,13 @@ internal static class TaskExtensions
         return flow.Pipe(pipe);
     }
 
-    public static async Task<Dictionary<string, HttpRequest>> Requests(this Task<Flow> task)
+    public static async Task<Dictionary<string, Request>> Requests(this Task<Flow> task)
     {
         Flow flow = await task;
         return flow.Requests;
     }
 
-    public static async Task<HttpRequest> Request(this Task<Flow> task)
+    public static async Task<Request> Request(this Task<Flow> task)
     {
         Flow flow = await task;
         return flow.Requests.First().Value;

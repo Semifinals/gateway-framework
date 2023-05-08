@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
-using Semifinals.Utils.GatewayFramework.Http;
+﻿using Semifinals.Utils.GatewayFramework.Http;
 
 namespace Semifinals.Utils.GatewayFramework;
 
 public class Aggregator : IQueryPipe
 {
-    public async Task<Dictionary<string, HttpResponseMessage>> Pipe(Dictionary<string, HttpRequest> reqs)
+    public async Task<Dictionary<string, HttpResponseMessage>> Pipe(Dictionary<string, Request> reqs)
     {
         // Fulfil all tasks in parallel
         Dictionary<string, Task<HttpResponseMessage>> responses = new();

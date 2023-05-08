@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Semifinals.Utils.GatewayFramework.Http;
 
 namespace Semifinals.Utils.GatewayFramework;
 
 public interface IPipeAsync
 {
-    Task<Dictionary<string, HttpRequest>> Pipe(Dictionary<string, HttpRequest> reqs);
+    Task<Dictionary<string, Request>> Pipe(Dictionary<string, Request> reqs);
 }

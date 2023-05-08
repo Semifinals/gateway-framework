@@ -1,19 +1,19 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Semifinals.Utils.GatewayFramework.Http;
 
 namespace Semifinals.Utils.GatewayFramework;
 
 public class Flow
 {
-    public Dictionary<string, HttpRequest> Requests { get; set; }
+    public Dictionary<string, Request> Requests { get; set; }
 
     public Dictionary<string, HttpResponseMessage>? Responses { get; set; } = null;
 
-    public Flow(HttpRequest req)
+    public Flow(Request req)
     {
         Requests = new() { { "singular", req } };
     }
 
-    public Flow(Dictionary<string, HttpRequest> reqs)
+    public Flow(Dictionary<string, Request> reqs)
     {
         Requests = reqs;
     }
