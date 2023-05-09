@@ -1,4 +1,7 @@
 ﻿using Semifinals.Utils.GatewayFramework.Http;
+using System.Net;
+using System.Text;
+using System.Text.Json;
 
 namespace Semifinals.Utils.GatewayFramework;
 
@@ -9,23 +12,45 @@ public class Aggregator : IQueryPipe
 {
     public async Task<Dictionary<string, HttpResponseMessage>> Pipe(Dictionary<string, Request> reqs)
     {
-        // Fulfil all tasks in parallel
-        Dictionary<string, Task<HttpResponseMessage>> responses = new();
+        // TODO: Fulfil all tasks in parallel
+        Dictionary<string, HttpResponseMessage> responses = new();
 
         foreach (var req in reqs)
         {
             using Client client = new(req.Value);
-            responses[req.Key] = client.SubmitAsync();
+            responses[req.Key] = await client.SubmitAsync();
         }
 
-        await Task.WhenAll(responses.Values);
+        return responses;
+    }
+}
 
-        // Return dictionary of completed tasks
-        Dictionary<string, HttpResponseMessage> results = new();
+public static class AggregatorExtensions
+{
+    /// <summary>
+    /// Get a single response from the flow.
+    /// </summary>
+    /// <param name="task">The flow to use</param>
+    /// <returns>The flow's first response</returns>
+    public static async Task<HttpResponseMessage?> AggregateResponses(this Task<Flow> task)
+    {
+        Flow flow = await task;
 
-        foreach (var response in responses)
-            results[response.Key] = response.Value.Result;
+        if (flow.Responses == null)
+            return null;
 
-        return results;
+        Dictionary<string, object> responses = new();
+        foreach (var response in flow.Responses)
+            responses.Add(
+                response.Key,
+                JsonSerializer.Deserialize<object>(await response.Value.Content.ReadAsStringAsync())!);
+
+        HttpResponseMessage res = new(HttpStatusCode.OK);
+        res.Content = new StringContent(
+            JsonSerializer.Serialize(responses),
+            Encoding.UTF8,
+            "application/json");
+
+        return res;
     }
 }

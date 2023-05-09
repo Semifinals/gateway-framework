@@ -13,6 +13,7 @@
 	<Authors>Finley Sherwood</Authors>
 	<Description>Package for implementing an API gateway with Azure Functions in C#</Description>
 	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	<Configurations>Debug;Release;Demo</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

@@ -12,10 +12,6 @@ public class Client : HttpClient
     public Client(Request req)
     {
         Request = req;
-
-        req.Headers.ToList().ForEach(header =>
-            header.Value.ToList().ForEach(value =>
-                DefaultRequestHeaders.Add(header.Key, value)));
     }
 
     /// <summary>
@@ -31,14 +27,18 @@ public class Client : HttpClient
                 Encoding.UTF8,
                 Request.Headers["Content-Type"].FirstOrDefault("application/json"));
 
-        HttpResponseMessage res = Request.Method switch
+        HttpRequestMessage request = new()
         {
-            "post" => await PostAsync(Request.Path, content),
-            "put" => await PutAsync(Request.Path, content),
-            "patch" => await PatchAsync(Request.Path, content),
-            "delete" => await DeleteAsync(Request.Path),
-            _ => await GetAsync(Request.Path)
+            RequestUri = new Uri(Request.Path),
+            Method = new HttpMethod(Request.Method),
+            Content = content
         };
+
+        foreach (var header in Request.Headers)
+            foreach (var value in header.Value)
+                request.Headers.Add(header.Key, value);
+
+        HttpResponseMessage res = await SendAsync(request);
 
         return res;
     }

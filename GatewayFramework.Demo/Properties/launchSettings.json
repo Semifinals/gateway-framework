@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "GatewayFramework.Demo": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7249",
+      "launchBrowser": false
+    }
+  }
+}

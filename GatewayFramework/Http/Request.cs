@@ -16,15 +16,12 @@ public class Request
 
     public IHeaderDictionary Headers { get; set; }
 
-    public Request(HttpRequest req)
+    public static async Task<Request> FromHttp(HttpRequest req)
     {
-        Path = req.Path;
-        Method = req.Method;
-
         using StreamReader reader = new(req.Body, Encoding.UTF8);
-        Body = reader.ReadToEnd();
+        string body = await reader.ReadToEndAsync();
 
-        Headers = req.Headers;
+        return new Request(req.Method, req.Path, body, req.Headers);
     }
 
     public Request(string method, string path, string? body = null, IHeaderDictionary? headers = null)
@@ -43,6 +40,18 @@ public class Request
     public Request Redirect(string path)
     {
         Path = path;
+        return this;
+    }
+
+    /// <summary>
+    /// Add a header to the request.
+    /// </summary>
+    /// <param name="key">The key of the header</param>
+    /// <param name="value">The value of the header</param>
+    /// <returns>The updated request</returns>
+    public Request AddHeader(string key, string value)
+    {
+        Headers.Add(key, value);
         return this;
     }
 
