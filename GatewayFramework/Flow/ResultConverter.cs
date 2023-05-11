@@ -9,10 +9,10 @@ public class ResultConverter
         return (int?)response?.StatusCode switch
         {
             200 => new OkObjectResult(await response.Content.ReadAsStringAsync()),
-            201 => new CreatedResult("", await response.Content.ReadAsStringAsync()), // TODO: Properly implement
+            201 => new CreatedResult(response.Headers.Location, await response.Content.ReadAsStringAsync()),
             202 => new AcceptedResult(),
             204 => new NoContentResult(),
-            400 => new BadRequestObjectResult(response.Content.ReadAsStringAsync()), // TODO: Properly implement
+            400 => new BadRequestObjectResult(await response.Content.ReadAsStringAsync()),
             401 => new UnauthorizedResult(),
             403 => new ForbidResult(),
             404 => new NotFoundResult(),

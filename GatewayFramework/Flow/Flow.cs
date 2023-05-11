@@ -78,9 +78,10 @@ public class Flow
         {
             return new ForbidResult();
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return new StatusCodeResult(502);
+            Console.WriteLine(ex);
+            return new StatusCodeResult(500);
         }
     }
 

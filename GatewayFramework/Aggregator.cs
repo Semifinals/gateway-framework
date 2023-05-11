@@ -41,9 +41,18 @@ public static class AggregatorExtensions
 
         Dictionary<string, object> responses = new();
         foreach (var response in flow.Responses)
+        {
+            string body = await response.Value.Content.ReadAsStringAsync();
+
             responses.Add(
                 response.Key,
-                JsonSerializer.Deserialize<object>(await response.Value.Content.ReadAsStringAsync())!);
+                new AggregationResponse
+                {
+                    status = (int)response.Value.StatusCode,
+                    body = body == "" ? null : JsonSerializer.Deserialize<object>(body),
+                    headers = response.Value.Headers.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.First())
+                });
+        }
 
         HttpResponseMessage res = new(HttpStatusCode.OK);
         res.Content = new StringContent(
@@ -53,4 +62,13 @@ public static class AggregatorExtensions
 
         return res;
     }
+}
+
+public class AggregationResponse
+{
+    public int status { get; set; }
+    
+    public object? body { get; set; }
+
+    public object? headers { get; set; }
 }
