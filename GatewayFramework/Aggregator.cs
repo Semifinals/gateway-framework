@@ -12,16 +12,19 @@ public class Aggregator : IQueryPipe
 {
     public async Task<Dictionary<string, HttpResponseMessage>> Pipe(Dictionary<string, Request> reqs)
     {
-        // TODO: Fulfil all tasks in parallel
-        Dictionary<string, HttpResponseMessage> responses = new();
+        string[] keys = reqs.Keys.ToArray();
 
-        foreach (var req in reqs)
-        {
-            using Client client = new(req.Value);
-            responses[req.Key] = await client.SubmitAsync();
-        }
+        IEnumerable<Task<HttpResponseMessage>> requests = reqs.Values
+            .ToArray()
+            .Select(req => Task.Run(async () =>
+            {
+                using Client client = new(req);
+                return await client.SubmitAsync();
+            }));
 
-        return responses;
+        return (await Task.WhenAll(requests))
+            .Select((response, i) => KeyValuePair.Create(keys[i], response))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
     }
 }
 
