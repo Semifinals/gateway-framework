@@ -35,7 +35,6 @@ public class Test
             await writer.FlushAsync();
             stream.Position = 0;
             httpContext.Request.Body = stream;
-            httpContext.Request.ContentType = "application/json";
         }
 
         if (query != null)
