@@ -1,4 +1,5 @@
-﻿using Semifinals.Utils.GatewayFramework.Http;
+﻿using Microsoft.AspNetCore.Http;
+using Semifinals.Utils.GatewayFramework.Http;
 
 namespace Semifinals.Utils.GatewayFramework.Authentication;
 
@@ -7,14 +8,18 @@ namespace Semifinals.Utils.GatewayFramework.Authentication;
 /// </summary>
 public abstract class Authenticator : IPipeAsync
 {
+    public readonly HttpRequest Request;
+        
     public readonly bool RequiresAuthorizationHeader;
 
     public readonly int RequiresPermissions;
 
     public Authenticator(
+        HttpRequest req,
         bool requiresAuthorizationHeader = false,
         int requiresPermissions = 0)
     {
+        Request = req;
         RequiresAuthorizationHeader = requiresAuthorizationHeader;
         RequiresPermissions = requiresPermissions;
     }
