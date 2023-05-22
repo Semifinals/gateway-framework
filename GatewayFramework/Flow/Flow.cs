@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Semifinals.Utils.GatewayFramework.Http;
+﻿using Semifinals.Utils.GatewayFramework.Http;
+using System.Net;
 
 namespace Semifinals.Utils.GatewayFramework;
 
@@ -61,27 +61,34 @@ public class Flow
     /// <param name="flow">The flow to initiate</param>
     /// <param name="handler">The callback to control the flow</param>
     /// <returns>The result of the flow</returns>
-    public static async Task<IActionResult> Handle(
+    public static async Task<HttpResponseMessage> Handle(
         Flow flow,
         Func<Flow, Task<HttpResponseMessage?>> handler)
     {
         try
         {
-            HttpResponseMessage? res = await handler(flow);
-            return await ResultConverter.Convert(res);
+            return await handler(flow) ?? throw new Exception();
         }
         catch (UnauthenticatedException)
         {
-            return new UnauthorizedResult();
+            return new HttpResponseMessage(HttpStatusCode.Unauthorized)
+            {
+                Content = new StringContent("Unauthorized")
+            };
         }
         catch (UnauthorizedException)
         {
-            return new ForbidResult();
+            return new HttpResponseMessage(HttpStatusCode.Forbidden)
+            {
+                Content = new StringContent("Forbidden")
+            };
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Console.WriteLine(ex);
-            return new StatusCodeResult(500);
+            return new HttpResponseMessage(HttpStatusCode.InternalServerError)
+            {
+                Content = new StringContent("Internal server error")
+            };
         }
     }
 
@@ -91,7 +98,7 @@ public class Flow
     /// <param name="reqs">The requests included in the flow</param>
     /// <param name="handler">The callback to control the flow</param>
     /// <returns>The result of the flow</returns>
-    public static async Task<IActionResult> Handle(
+    public static async Task<HttpResponseMessage> Handle(
         Dictionary<string, Request> reqs,
         Func<Flow, Task<HttpResponseMessage?>> handler)
     {
@@ -104,7 +111,7 @@ public class Flow
     /// <param name="req">The request included in the flow</param>
     /// <param name="handler">The callback to control the flow</param>
     /// <returns>The result of the flow</returns>
-    public static async Task<IActionResult> Handle(
+    public static async Task<HttpResponseMessage> Handle(
         Request req,
         Func<Flow, Task<HttpResponseMessage?>> handler)
     {

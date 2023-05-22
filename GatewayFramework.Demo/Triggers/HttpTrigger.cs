@@ -1,17 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
-using Semifinals.Utils.GatewayFramework.Http;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using Semifinals.Utils.GatewayFramework.Http;
 
 namespace Semifinals.Utils.GatewayFramework;
 
 public class HttpTrigger
 {
     [FunctionName("Passthrough")]
-    public static async Task<IActionResult> Passthrough(
+    public static async Task<HttpResponseMessage> Passthrough(
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "passthrough")] HttpRequest req)
     {
         return await Flow.Handle(
@@ -23,7 +17,7 @@ public class HttpTrigger
     }
 
     [FunctionName("Passthrough201")]
-    public static async Task<IActionResult> Passthrough201(
+    public static async Task<HttpResponseMessage> Passthrough201(
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "passthrough201")] HttpRequest req)
     {
         return await Flow.Handle(
@@ -35,7 +29,7 @@ public class HttpTrigger
     }
 
     [FunctionName("Passthrough204")]
-    public static async Task<IActionResult> Passthrough204(
+    public static async Task<HttpResponseMessage> Passthrough204(
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "passthrough204")] HttpRequest req)
     {
         return await Flow.Handle(
@@ -47,7 +41,7 @@ public class HttpTrigger
     }
 
     [FunctionName("Passthrough400")]
-    public static async Task<IActionResult> Passthrough400(
+    public static async Task<HttpResponseMessage> Passthrough400(
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "passthrough400")] HttpRequest req)
     {
         return await Flow.Handle(
@@ -59,7 +53,7 @@ public class HttpTrigger
     }
 
     [FunctionName("Aggregate")]
-    public static async Task<IActionResult> Aggregate(
+    public static async Task<HttpResponseMessage> Aggregate(
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "aggregate")] HttpRequest req)
     {
         return await Flow.Handle(
@@ -82,7 +76,7 @@ public class HttpTrigger
     }
 
     [FunctionName("Aggregate201")]
-    public static async Task<IActionResult> Aggregate201(
+    public static async Task<HttpResponseMessage> Aggregate201(
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "aggregate201")] HttpRequest req)
     {
         return await Flow.Handle(
@@ -105,7 +99,7 @@ public class HttpTrigger
     }
 
     [FunctionName("Aggregate204")]
-    public static async Task<IActionResult> Aggregate204(
+    public static async Task<HttpResponseMessage> Aggregate204(
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "aggregate204")] HttpRequest req)
     {
         return await Flow.Handle(
@@ -128,7 +122,7 @@ public class HttpTrigger
     }
 
     [FunctionName("Aggregate400")]
-    public static async Task<IActionResult> Aggregate400(
+    public static async Task<HttpResponseMessage> Aggregate400(
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "aggregate400")] HttpRequest req)
     {
         return await Flow.Handle(
@@ -189,6 +183,20 @@ public class HttpTrigger
         await Task.Delay(1);
         string[] errors = new string[] { "error1", "error2" };
         return new BadRequestObjectResult(errors);
+    }
+
+    [FunctionName("TEMPORARY")]
+    public static async Task<HttpResponseMessage> TEMPORARY(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "temp")] HttpRequest req)
+    {
+        return await Flow.Handle(
+            (await Request.FromHttp(req))
+                .Redirect("https://identity.api.ckdfree.com/register")
+                .SetMethod(HttpMethod.Post)
+                .AddHeader("x-functions-key", "aExz866ktZdVOQIekUp8-JYK7oI-MNifeeMva0GhQfo7AzFud3j_7A=="),
+            flow => flow
+                .Pipe(new Passthrough())
+                .Response());
     }
 }
 

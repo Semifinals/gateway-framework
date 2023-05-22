@@ -29,14 +29,12 @@ public class Request
         Path = path;
         Method = method;
         Body = body;
-        //Headers = headers ?? new HeaderDictionary();
         Headers = new HeaderDictionary
         {
             { "Accept", "application/json" },
             { "Accept-Encoding", "gzip, deflate, br" },
             { "Connection", "keep-alive" },
-            { "Host", headers?.FirstOrDefault(x => x.Key == "Host").Value.FirstOrDefault(defaultValue: null) },
-            { "User-Agent", headers?.FirstOrDefault(x => x.Key == "User-Agent").Value.FirstOrDefault(defaultValue: null) },
+            { "User-Agent", "Semifinals/1.0 Gateway" },
             { "Authorization", headers?.FirstOrDefault(x => x.Key == "Authorization").Value.FirstOrDefault(defaultValue: null) },
             { "x-functions-key", headers?.FirstOrDefault(x => x.Key == "x-functions-key").Value.FirstOrDefault(defaultValue: null) }
         };
@@ -62,7 +60,19 @@ public class Request
     /// <returns>The updated request</returns>
     public Request AddHeader(string key, string value)
     {
+        Headers.Remove(key);
         Headers.Add(key, value);
+        return this;
+    }
+
+    /// <summary>
+    /// Set the HTTP method used by the new request.
+    /// </summary>
+    /// <param name="method">The new HTTP method to use</param>
+    /// <returns>The updated request</returns>
+    public Request SetMethod(HttpMethod method)
+    {
+        Method = method.Method;
         return this;
     }
 

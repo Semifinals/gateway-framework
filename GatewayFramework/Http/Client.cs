@@ -1,11 +1,12 @@
-﻿using System.Text;
+﻿using System.Net.Http.Headers;
+using System.Text;
 
 namespace Semifinals.Utils.GatewayFramework.Http;
 
 /// <summary>
 /// A client to submit HTTP requests on behalf of the gateway.
 /// </summary>
-public class Client : HttpClient
+public class Client
 {
     public readonly Request Request;
 
@@ -25,21 +26,23 @@ public class Client : HttpClient
             : new StringContent(
                 Request.Body,
                 Encoding.UTF8,
-                //Request.Headers["Content-Type"].FirstOrDefault("application/json"));
                 "application/json");
 
-        HttpRequestMessage request = new()
+        HttpRequestMessage req = new(new HttpMethod(Request.Method), Request.Path)
         {
-            RequestUri = new Uri(Request.Path),
-            Method = new HttpMethod(Request.Method),
             Content = content
         };
 
         foreach (var header in Request.Headers)
             foreach (var value in header.Value)
-                request.Headers.Add(header.Key, value);
+            {
+                req.Headers.Remove(header.Key);
+                req.Headers.Add(header.Key, value);
+            }
 
-        HttpResponseMessage res = await SendAsync(request);
+        using HttpClient client = new();
+        HttpResponseMessage res = await client.SendAsync(req);
+        res.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
         return res;
     }

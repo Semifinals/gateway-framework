@@ -18,7 +18,7 @@ public class Aggregator : IQueryPipe
             .ToArray()
             .Select(req => Task.Run(async () =>
             {
-                using Client client = new(req);
+                Client client = new(req);
                 return await client.SubmitAsync();
             }));
 
