@@ -25,7 +25,8 @@ public class Client : HttpClient
             : new StringContent(
                 Request.Body,
                 Encoding.UTF8,
-                Request.Headers["Content-Type"].FirstOrDefault("application/json"));
+                //Request.Headers["Content-Type"].FirstOrDefault("application/json"));
+                "application/json");
 
         HttpRequestMessage request = new()
         {

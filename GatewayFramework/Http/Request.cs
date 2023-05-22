@@ -29,9 +29,20 @@ public class Request
         Path = path;
         Method = method;
         Body = body;
-        Headers = headers ?? new HeaderDictionary();
+        //Headers = headers ?? new HeaderDictionary();
+        Headers = new HeaderDictionary
+        {
+            { "Accept", "application/json" },
+            { "Accept-Encoding", "gzip, deflate, br" },
+            { "Connection", "keep-alive" },
+            { "Host", headers?.FirstOrDefault(x => x.Key == "Host").Value.FirstOrDefault(defaultValue: null) },
+            { "User-Agent", headers?.FirstOrDefault(x => x.Key == "User-Agent").Value.FirstOrDefault(defaultValue: null) },
+            { "Authorization", headers?.FirstOrDefault(x => x.Key == "Authorization").Value.FirstOrDefault(defaultValue: null) },
+            { "x-functions-key", headers?.FirstOrDefault(x => x.Key == "x-functions-key").Value.FirstOrDefault(defaultValue: null) }
+        };
+        
     }
-
+    
     /// <summary>
     /// Redirect the request to a new path.
     /// </summary>
