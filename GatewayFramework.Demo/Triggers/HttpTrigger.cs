@@ -184,20 +184,6 @@ public class HttpTrigger
         string[] errors = new string[] { "error1", "error2" };
         return new BadRequestObjectResult(errors);
     }
-
-    [FunctionName("TEMPORARY")]
-    public static async Task<HttpResponseMessage> TEMPORARY(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "temp")] HttpRequest req)
-    {
-        return await Flow.Handle(
-            (await Request.FromHttp(req))
-                .Redirect("https://identity.api.ckdfree.com/register")
-                .SetMethod(HttpMethod.Post)
-                .AddHeader("x-functions-key", "aExz866ktZdVOQIekUp8-JYK7oI-MNifeeMva0GhQfo7AzFud3j_7A=="),
-            flow => flow
-                .Pipe(new Passthrough())
-                .Response());
-    }
 }
 
 public class ExampleResponse
